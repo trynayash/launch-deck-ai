@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
+  const { user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -46,12 +48,25 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link to="/login">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/signup">Get Started</Link>
-            </Button>
+            {user ? (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link to="/dashboard">Dashboard</Link>
+                </Button>
+                <Button variant="ghost" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link to="/login">Sign In</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -81,12 +96,28 @@ const Navbar = () => {
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center px-4 space-x-3">
-              <Button variant="ghost" className="w-full justify-center" asChild>
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
-              </Button>
-              <Button className="w-full justify-center" asChild>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button variant="ghost" className="w-full justify-center" asChild>
+                    <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                  </Button>
+                  <Button className="w-full justify-center" onClick={() => {
+                    signOut();
+                    setIsMenuOpen(false);
+                  }}>
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" className="w-full justify-center" asChild>
+                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
+                  </Button>
+                  <Button className="w-full justify-center" asChild>
+                    <Link to="/register" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
