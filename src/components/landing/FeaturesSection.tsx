@@ -6,7 +6,7 @@ import {
   Activity, 
   Users, 
   Terminal,
-  FilePresentation
+  Presentation
 } from 'lucide-react';
 
 const features = [
@@ -35,7 +35,7 @@ const features = [
     color: 'bg-secondary-50 dark:bg-secondary-900/20'
   },
   {
-    icon: <FilePresentation className="h-12 w-12 text-primary-600" />,
+    icon: <Presentation className="h-12 w-12 text-primary-600" />,
     title: 'Auto-Generated Pitch Deck',
     description: 'Create a professional 10-slide pitch deck with key metrics and visualizations ready to share with investors.',
     color: 'bg-primary-50 dark:bg-primary-900/20'
