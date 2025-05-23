@@ -32,7 +32,7 @@ const apiRequest = async <T>(
   method: string = 'GET', 
   data?: any,
   options?: RequestInit
-): Promise<T> => {
+): Promise<ApiResponse<T>> => {
   const headers = await getAuthHeaders();
   
   const requestOptions: RequestInit = {
@@ -53,7 +53,7 @@ const apiRequest = async <T>(
     throw new Error(error.message || `API Error: ${response.status}`);
   }
 
-  return response.json();
+  return response.json() as Promise<ApiResponse<T>>;
 };
 
 // Business Idea Analysis API
@@ -65,22 +65,22 @@ export const ideaAnalysisApi = {
     targetMarket?: string;
     budget?: number;
     timeline?: string;
-  }) => apiRequest('/ideas/analyze', 'POST', ideaData),
+  }): Promise<ApiResponse<IdeaAnalysis>> => apiRequest('/ideas/analyze', 'POST', ideaData),
 
   // Get analysis by ID
-  getAnalysis: (analysisId: string) => 
+  getAnalysis: (analysisId: string): Promise<ApiResponse<IdeaAnalysis>> => 
     apiRequest(`/ideas/analysis/${analysisId}`),
 
   // Get user's analysis history
-  getHistory: (page = 1, limit = 10) => 
+  getHistory: (page = 1, limit = 10): Promise<ApiResponse<IdeaAnalysis[]>> => 
     apiRequest(`/ideas/history?page=${page}&limit=${limit}`),
 
   // Update analysis
-  updateAnalysis: (analysisId: string, updates: any) => 
+  updateAnalysis: (analysisId: string, updates: any): Promise<ApiResponse<IdeaAnalysis>> => 
     apiRequest(`/ideas/analysis/${analysisId}`, 'PUT', updates),
 
   // Delete analysis
-  deleteAnalysis: (analysisId: string) => 
+  deleteAnalysis: (analysisId: string): Promise<ApiResponse<void>> => 
     apiRequest(`/ideas/analysis/${analysisId}`, 'DELETE'),
 };
 
@@ -91,17 +91,17 @@ export const featureGenerationApi = {
     ideaId: string;
     category?: 'core' | 'advanced' | 'premium';
     count?: number;
-  }) => apiRequest('/features/generate', 'POST', data),
+  }): Promise<ApiResponse<FeatureSet>> => apiRequest('/features/generate', 'POST', data),
 
   // Prioritize features
   prioritizeFeatures: (data: {
     ideaId: string;
     features: string[];
     criteria?: 'impact' | 'effort' | 'revenue' | 'user_value';
-  }) => apiRequest('/features/prioritize', 'POST', data),
+  }): Promise<ApiResponse<FeatureSet>> => apiRequest('/features/prioritize', 'POST', data),
 
   // Get feature roadmap
-  getRoadmap: (ideaId: string, timeframe?: '3months' | '6months' | '1year') => 
+  getRoadmap: (ideaId: string, timeframe?: '3months' | '6months' | '1year'): Promise<ApiResponse<FeatureSet>> => 
     apiRequest(`/features/roadmap/${ideaId}?timeframe=${timeframe || '6months'}`),
 
   // Estimate feature development cost
@@ -109,7 +109,7 @@ export const featureGenerationApi = {
     features: string[];
     complexity?: 'low' | 'medium' | 'high';
     region?: 'us' | 'eu' | 'asia';
-  }) => apiRequest('/features/estimate-cost', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/features/estimate-cost', 'POST', data),
 };
 
 // Market Mapping API
@@ -120,30 +120,30 @@ export const marketMappingApi = {
     industry: string;
     region?: string[];
     depth?: 'basic' | 'comprehensive';
-  }) => apiRequest('/market/analyze', 'POST', data),
+  }): Promise<ApiResponse<MarketAnalysis>> => apiRequest('/market/analyze', 'POST', data),
 
   // Get competitor analysis
   getCompetitors: (data: {
     ideaId: string;
     region?: string;
     includeIndirect?: boolean;
-  }) => apiRequest('/market/competitors', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/market/competitors', 'POST', data),
 
   // Market size estimation
   getMarketSize: (data: {
     industry: string;
     region: string;
     segment?: string;
-  }) => apiRequest('/market/size', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/market/size', 'POST', data),
 
   // Trend analysis
   getTrends: (data: {
     industry: string;
     timeframe?: '1year' | '3years' | '5years';
-  }) => apiRequest('/market/trends', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/market/trends', 'POST', data),
 
   // Customer personas
-  generatePersonas: (ideaId: string) => 
+  generatePersonas: (ideaId: string): Promise<ApiResponse<any>> => 
     apiRequest(`/market/personas/${ideaId}`, 'POST'),
 };
 
@@ -156,34 +156,34 @@ export const techStackApi = {
     budget?: 'low' | 'medium' | 'high';
     timeline?: string;
     team_size?: number;
-  }) => apiRequest('/tech/mvp-stack', 'POST', data),
+  }): Promise<ApiResponse<TechStack>> => apiRequest('/tech/mvp-stack', 'POST', data),
 
   // Compare tech stacks
   compareStacks: (data: {
     stacks: string[];
     criteria: string[];
-  }) => apiRequest('/tech/compare', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/tech/compare', 'POST', data),
 
   // Get cost analysis for tech stack
   getCostAnalysis: (data: {
     technologies: string[];
     scale?: 'startup' | 'growth' | 'enterprise';
     region?: string;
-  }) => apiRequest('/tech/cost-analysis', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/tech/cost-analysis', 'POST', data),
 
   // Architecture recommendations
   getArchitecture: (data: {
     ideaId: string;
     scale: 'mvp' | 'growth' | 'enterprise';
     requirements?: string[];
-  }) => apiRequest('/tech/architecture', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/tech/architecture', 'POST', data),
 
   // Development timeline estimation
   getTimeline: (data: {
     techStack: string[];
     features: string[];
     teamSize: number;
-  }) => apiRequest('/tech/timeline', 'POST', data),
+  }): Promise<ApiResponse<any>> => apiRequest('/tech/timeline', 'POST', data),
 };
 
 // Pitch Deck Creation API
@@ -198,56 +198,56 @@ export const pitchDeckApi = {
       logo?: string;
       companyName?: string;
     };
-  }) => apiRequest('/pitch/generate', 'POST', data),
+  }): Promise<ApiResponse<PitchDeck>> => apiRequest('/pitch/generate', 'POST', data),
 
   // Get pitch deck by ID
-  getDeck: (deckId: string) => 
+  getDeck: (deckId: string): Promise<ApiResponse<PitchDeck>> => 
     apiRequest(`/pitch/deck/${deckId}`),
 
   // Update pitch deck
-  updateDeck: (deckId: string, updates: any) => 
+  updateDeck: (deckId: string, updates: any): Promise<ApiResponse<PitchDeck>> => 
     apiRequest(`/pitch/deck/${deckId}`, 'PUT', updates),
 
   // Export pitch deck
-  exportDeck: (deckId: string, format: 'pdf' | 'pptx' | 'html') => 
+  exportDeck: (deckId: string, format: 'pdf' | 'pptx' | 'html'): Promise<ApiResponse<any>> => 
     apiRequest(`/pitch/deck/${deckId}/export?format=${format}`, 'POST'),
 
   // Get available templates
-  getTemplates: () => 
+  getTemplates: (): Promise<ApiResponse<any>> => 
     apiRequest('/pitch/templates'),
 
   // Generate presentation script
-  generateScript: (deckId: string, duration?: number) => 
+  generateScript: (deckId: string, duration?: number): Promise<ApiResponse<any>> => 
     apiRequest(`/pitch/deck/${deckId}/script`, 'POST', { duration }),
 
   // Analytics for pitch deck views
-  getAnalytics: (deckId: string) => 
+  getAnalytics: (deckId: string): Promise<ApiResponse<any>> => 
     apiRequest(`/pitch/deck/${deckId}/analytics`),
 };
 
 // Analytics and Insights API
 export const analyticsApi = {
   // User dashboard analytics
-  getDashboardStats: () => 
+  getDashboardStats: (): Promise<ApiResponse<any>> => 
     apiRequest('/analytics/dashboard'),
 
   // Idea performance metrics
-  getIdeaMetrics: (ideaId: string) => 
+  getIdeaMetrics: (ideaId: string): Promise<ApiResponse<any>> => 
     apiRequest(`/analytics/idea/${ideaId}`),
 
   // Platform usage statistics
-  getUsageStats: (timeframe?: string) => 
+  getUsageStats: (timeframe?: string): Promise<ApiResponse<any>> => 
     apiRequest(`/analytics/usage?timeframe=${timeframe || '30days'}`),
 
   // Export user data
-  exportUserData: (format: 'json' | 'csv') => 
+  exportUserData: (format: 'json' | 'csv'): Promise<ApiResponse<any>> => 
     apiRequest(`/analytics/export?format=${format}`, 'POST'),
 };
 
 // File and Asset Management API
 export const assetApi = {
   // Upload file to user-assets bucket
-  uploadFile: async (file: File, path?: string) => {
+  uploadFile: async (file: File, path?: string): Promise<any> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Authentication required');
 
@@ -262,7 +262,7 @@ export const assetApi = {
   },
 
   // Get file URL
-  getFileUrl: async (path: string) => {
+  getFileUrl: async (path: string): Promise<string> => {
     const { data } = supabase.storage
       .from('user-assets')
       .getPublicUrl(path);
@@ -271,7 +271,7 @@ export const assetApi = {
   },
 
   // Delete file
-  deleteFile: async (path: string) => {
+  deleteFile: async (path: string): Promise<any> => {
     const { data, error } = await supabase.storage
       .from('user-assets')
       .remove([path]);
@@ -281,7 +281,7 @@ export const assetApi = {
   },
 
   // List user files
-  listFiles: async (folder?: string) => {
+  listFiles: async (folder?: string): Promise<any> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Authentication required');
 
