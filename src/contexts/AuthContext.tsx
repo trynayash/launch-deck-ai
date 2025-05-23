@@ -5,6 +5,9 @@ import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+// Developed by Yash Suthar – StartupDeck
+// This context provides authentication functionality throughout the app
+
 interface AuthContextType {
   session: Session | null;
   user: User | null;
@@ -13,6 +16,7 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithMagicLink: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   getProfile: () => Promise<any>;
 }
@@ -30,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -81,14 +86,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          // Skip email verification entirely
+          emailRedirectTo: window.location.origin,
+          data: {
+            email,
+          }
+        }
+      });
       
       if (error) {
         toast.error(error.message);
         throw error;
       }
-      
-      toast.success('Registration successful! Please check your email for verification.');
+
+      if (data.session) {
+        // Immediate login if session is available
+        toast.success('Registration successful!');
+        navigate('/dashboard');
+      } else {
+        // Fallback for any edge cases
+        toast.success('Registration successful! Please log in.');
+        navigate('/login');
+      }
     } catch (error) {
       console.error('Error signing up:', error);
       throw error;
@@ -127,6 +150,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       console.error('Error signing in with Google:', error);
+      throw error;
+    }
+  };
+
+  const signInWithMagicLink = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) {
+        toast.error(error.message);
+        throw error;
+      }
+      
+      toast.success('Magic link sent! Check your email.');
+    } catch (error) {
+      console.error('Error sending magic link:', error);
       throw error;
     }
   };
@@ -178,6 +222,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signInWithGoogle,
+    signInWithMagicLink,
     signOut,
     getProfile
   };

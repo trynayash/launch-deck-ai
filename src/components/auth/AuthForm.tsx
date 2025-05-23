@@ -1,4 +1,5 @@
 
+// Developed by Yash Suthar – StartupDeck
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -18,6 +19,7 @@ import {
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -31,40 +33,80 @@ const registerSchema = loginSchema.extend({
   path: ["confirmPassword"],
 });
 
+const magicLinkSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+});
+
 type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
+type MagicLinkFormValues = z.infer<typeof magicLinkSchema>;
 
 interface AuthFormProps {
   type: 'login' | 'register';
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
-  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { signIn, signUp, signInWithGoogle, signInWithMagicLink } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>(type === 'login' ? 'password' : 'register');
 
-  const form = useForm<LoginFormValues | RegisterFormValues>({
-    resolver: zodResolver(type === 'login' ? loginSchema : registerSchema),
+  const passwordForm = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
-      ...(type === 'register' ? { confirmPassword: '' } : {}),
     },
   });
 
-  const onSubmit = async (values: LoginFormValues | RegisterFormValues) => {
+  const registerForm = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const magicLinkForm = useForm<MagicLinkFormValues>({
+    resolver: zodResolver(magicLinkSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onPasswordSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     try {
-      if (type === 'login') {
-        await signIn(values.email, values.password);
-      } else {
-        await signUp(values.email, values.password);
-        form.reset();
-      }
+      await signIn(values.email, values.password);
     } catch (error) {
       console.error('Authentication error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const onRegisterSubmit = async (values: RegisterFormValues) => {
+    setIsLoading(true);
+    try {
+      await signUp(values.email, values.password);
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onMagicLinkSubmit = async (values: MagicLinkFormValues) => {
+    setIsMagicLinkLoading(true);
+    try {
+      await signInWithMagicLink(values.email);
+      magicLinkForm.reset();
+    } catch (error) {
+      console.error('Magic link error:', error);
+    } finally {
+      setIsMagicLinkLoading(false);
     }
   };
 
@@ -131,42 +173,115 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white px-2 text-muted-foreground dark:bg-gray-900">
-                Or continue with email
+                Or continue with
               </span>
             </div>
           </div>
           
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="you@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {type === 'register' && (
+          {type === 'login' ? (
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="password">Password</TabsTrigger>
+                <TabsTrigger value="magic">Magic Link</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="password">
+                <Form {...passwordForm}>
+                  <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+                    <FormField
+                      control={passwordForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="you@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={passwordForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder="••••••••" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : 'Sign In'}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+              
+              <TabsContent value="magic">
+                <Form {...magicLinkForm}>
+                  <form onSubmit={magicLinkForm.handleSubmit(onMagicLinkSubmit)} className="space-y-4">
+                    <FormField
+                      control={magicLinkForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="you@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormDescription>
+                      We'll send you a magic link to your email for passwordless sign-in
+                    </FormDescription>
+                    <Button type="submit" className="w-full" disabled={isMagicLinkLoading}>
+                      {isMagicLinkLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : 'Send Magic Link'}
+                    </Button>
+                  </form>
+                </Form>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <Form {...registerForm}>
+              <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
                 <FormField
-                  control={form.control}
+                  control={registerForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="you@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={registerForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={registerForm.control}
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
@@ -178,14 +293,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     </FormItem>
                   )}
                 />
-              )}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : type === 'login' ? 'Sign In' : 'Sign Up'}
-              </Button>
-            </form>
-          </Form>
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : 'Sign Up'}
+                </Button>
+              </form>
+            </Form>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-center">
