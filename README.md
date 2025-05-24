@@ -155,4 +155,4 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 ---
 
-> 💼 Built by Yash Suthar – turning startup ideas into powerful investor decks with AI.
+💼 Built by Yash Suthar – turning startup ideas into powerful investor decks with AI.
