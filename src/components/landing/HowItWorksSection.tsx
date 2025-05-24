@@ -1,71 +1,119 @@
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Target, Zap, CheckCircle2 } from 'lucide-react';
 
 const steps = [
   {
     number: '01',
     title: 'Enter Your Idea',
     description: 'Simply input your business idea in a single sentence or short paragraph.',
-    color: 'from-primary-500 to-primary-600'
+    icon: <Sparkles className="w-6 h-6 text-white" />,
+    gradient: 'from-purple-500 to-blue-500',
+    delay: '0ms'
   },
   {
     number: '02',
     title: 'AI Analysis Runs',
     description: 'Our AI engine processes your idea against market data, trends, and patterns.',
-    color: 'from-secondary-500 to-secondary-600'
+    icon: <Target className="w-6 h-6 text-white" />,
+    gradient: 'from-cyan-500 to-teal-500',
+    delay: '200ms'
   },
   {
     number: '03',
     title: 'Review Insights',
     description: 'Get comprehensive analysis across five key business dimensions.',
-    color: 'from-accent-500 to-accent-600'
+    icon: <Zap className="w-6 h-6 text-white" />,
+    gradient: 'from-pink-500 to-rose-500',
+    delay: '400ms'
   },
   {
     number: '04',
     title: 'Refine & Export',
     description: 'Download reports, share with your team, and iterate on your idea.',
-    color: 'from-primary-600 to-secondary-600'
+    icon: <CheckCircle2 className="w-6 h-6 text-white" />,
+    gradient: 'from-green-500 to-emerald-500',
+    delay: '600ms'
   }
 ];
 
 const HowItWorksSection = () => {
   return (
-    <section className="bg-white dark:bg-gray-950 section-padding">
-      <div className="container-width">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            How StartupDeck Works
+    <section className="relative bg-gradient-to-br from-slate-900 via-purple-900/50 to-slate-900 section-padding overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      </div>
+
+      {/* Grid pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Ccircle cx="7" cy="7" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+
+      <div className="container-width relative z-10">
+        <div className="max-w-3xl mx-auto text-center mb-20 animate-fade-in">
+          <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-medium text-white mb-6">
+            <Target className="w-4 h-4 mr-2 text-cyan-400" />
+            Simple Process
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            How StartupDeck
+            <span className="block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Works for You
+            </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Our AI-powered platform validates your business ideas in four simple steps.
           </p>
         </div>
 
         <div className="relative">
-          {/* Process steps */}
-          <div className="hidden lg:block absolute top-24 left-0 right-0 h-0.5 bg-gray-200 dark:bg-gray-800"></div>
+          {/* Connection line */}
+          <div className="hidden lg:block absolute top-32 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
-              <div key={index} className="relative">
-                <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 shadow-soft hover:shadow-medium transition-shadow h-full flex flex-col">
-                  <div 
-                    className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r ${step.color} text-white font-bold mb-4`}
-                  >
+              <div 
+                key={index} 
+                className="relative group animate-slide-in-up"
+                style={{ animationDelay: step.delay }}
+              >
+                <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl hover:shadow-4xl transition-all duration-500 hover:scale-105 hover:bg-white/10 h-full flex flex-col">
+                  {/* Step number */}
+                  <div className={`relative w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-r ${step.gradient} text-white font-bold text-xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     {step.number}
+                    
+                    {/* Floating icon */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-bounce-gentle">
+                      {step.icon}
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{step.description}</p>
+
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-white transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-300 group-hover:text-gray-200 transition-colors flex-grow leading-relaxed">
+                    {step.description}
+                  </p>
                   
+                  {/* Arrow connector */}
                   {index < steps.length - 1 && (
-                    <div className="hidden lg:block absolute top-24 right-0 transform translate-x-1/2 -translate-y-1/2">
-                      <ArrowRight className="h-6 w-6 text-gray-400" />
+                    <div className="hidden lg:block absolute top-32 right-0 transform translate-x-1/2 -translate-y-1/2 z-20">
+                      <div className="w-8 h-8 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20">
+                        <ArrowRight className="h-4 w-4 text-white/60" />
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16 animate-fade-in animation-delay-1000">
+          <div className="inline-flex items-center space-x-2 text-gray-400">
+            <span>Ready to get started?</span>
+            <ArrowRight className="w-4 h-4 animate-bounce-gentle" />
           </div>
         </div>
       </div>
