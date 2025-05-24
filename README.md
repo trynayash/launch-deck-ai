@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=40&pause=1000&color=2E9AFE&center=true&vCenter=true&random=false&width=600&height=100&lines=🚀+StartupDeck;AI-Powered+Pitch+Deck+Generator" alt="StartupDeck" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=40&pause=1000&color=2E9AFE&center=true&vCenter=true&random=false&width=600&height=100&lines=🚀+StartupDeck;AI+Deck+Maker" alt="StartupDeck" />
 </div>
 
 <p align="center">
@@ -226,5 +226,5 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 </div>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=20&pause=1000&color=2E9AFE&center=true&vCenter=true&random=false&width=600&height=50&lines=💼+Built+by+Yash+Suthar;Turning+startup+ideas+into+powerful+investor+decks+with+AI" alt="Footer Text" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=20&pause=1000&color=2E9AFE&center=true&vCenter=true&random=false&width=600&height=50&lines=💼+Built+by+Yash+Suthar;AI+Pitch+Deck+Creator" alt="Footer Text" />
 </p>
