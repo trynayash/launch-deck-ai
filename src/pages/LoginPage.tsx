@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AuthForm from '@/components/auth/AuthForm';
-import Layout from '@/components/layout/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 
 const LoginPage = () => {
@@ -19,15 +18,7 @@ const LoginPage = () => {
     }
   }, [user, navigate, location]);
 
-  return (
-    <Layout withFooter={false}>
-      <div className="container-width py-16 md:py-24">
-        <div className="max-w-md mx-auto">
-          <AuthForm type="login" />
-        </div>
-      </div>
-    </Layout>
-  );
+  return <AuthForm type="login" />;
 };
 
 export default LoginPage;

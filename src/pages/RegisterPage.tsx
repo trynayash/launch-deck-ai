@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthForm from '@/components/auth/AuthForm';
-import Layout from '@/components/layout/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 
 const RegisterPage = () => {
@@ -17,15 +16,7 @@ const RegisterPage = () => {
     }
   }, [user, navigate]);
 
-  return (
-    <Layout withFooter={false}>
-      <div className="container-width py-16 md:py-24">
-        <div className="max-w-md mx-auto">
-          <AuthForm type="register" />
-        </div>
-      </div>
-    </Layout>
-  );
+  return <AuthForm type="register" />;
 };
 
 export default RegisterPage;
