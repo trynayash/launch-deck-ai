@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -124,6 +123,23 @@ export default {
 				'pulse-glow': {
 					'0%, 100%': { boxShadow: '0 0 5px rgba(66, 113, 240, 0.3)' },
 					'50%': { boxShadow: '0 0 20px rgba(66, 113, 240, 0.6)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+					'33%': { transform: 'translateY(-10px) rotate(1deg)' },
+					'66%': { transform: 'translateY(5px) rotate(-1deg)' }
+				},
+				'float-0': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-20px)' }
+				},
+				'float-1': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-15px)' }
+				},
+				'float-2': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
@@ -134,7 +150,11 @@ export default {
 				'slide-in-up': 'slide-in-up 0.3s ease-out',
 				'slide-in-down': 'slide-in-down 0.3s ease-out',
 				'bounce-gentle': 'bounce-gentle 2s ease-in-out infinite',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'float': 'float 6s ease-in-out infinite',
+				'float-0': 'float-0 3s ease-in-out infinite',
+				'float-1': 'float-1 4s ease-in-out infinite',
+				'float-2': 'float-2 5s ease-in-out infinite'
 			},
 			fontFamily: {
 				sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
