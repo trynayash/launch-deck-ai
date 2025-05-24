@@ -8,15 +8,6 @@
   <img src="https://img.shields.io/badge/Modern-UI-2E9AFE?style=for-the-badge&logo=react&logoColor=white" alt="Modern UI">
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/github/languages/top/trynayash/startupdeck?color=2E9AFE&style=for-the-badge">
-  <img src="https://img.shields.io/github/repo-size/trynayash/startupdeck?style=for-the-badge&color=2E9AFE">
-  <img src="https://img.shields.io/github/license/trynayash/startupdeck?style=for-the-badge&color=2E9AFE">
-</p>
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/trinib/trinib/main/.images/marquee.svg" alt="Marquee" />
-</div>
 
 ## 🎯 Project Showcase
 
@@ -225,7 +216,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 - GitHub: [@trynayash](https://github.com/trynayash)
 - Portfolio: [designwithyxsh](https://github.com/trynayash)
-- LinkedIn: [Yash Suthar](https://linkedin.com/in/yxshsuthar)
+- LinkedIn: [Yash Suthar](https://linkedin.com/in/yxshcodes)
 - Twitter: [@yxshcodes](https://twitter.com/yxshcodes)
 
 ---
