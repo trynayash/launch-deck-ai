@@ -34,9 +34,13 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-                StartupDeck
-              </span>
+              <a href="/" className="flex items-center gap-2">
+                <img src="/logo.svg" alt="StartupDeck Logo" className="h-8 w-auto" />
+                 <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+                  StartupDeck
+                 </span>
+               </a>
+
             </Link>
 
             <nav className="hidden md:flex ml-10 space-x-8">
