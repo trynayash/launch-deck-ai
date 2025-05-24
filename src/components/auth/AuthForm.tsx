@@ -1,7 +1,6 @@
-
 // Developed by Yash Suthar – StartupDeck
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +16,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -45,6 +44,7 @@ interface AuthFormProps {
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const { signIn, signUp, signInWithGoogle, signInWithGitHub, signInWithMagicLink } = useAuth();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGitHubLoading, setIsGitHubLoading] = useState(false);
@@ -52,6 +52,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [authMethod, setAuthMethod] = useState<'password' | 'magic'>('password');
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const passwordForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -133,26 +134,39 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     }
   };
 
+  const handleNavigationWithAnimation = (targetPath: string) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      navigate(targetPath);
+    }, 150);
+  };
+
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Dark Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gray-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 to-gray-800 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10"></div>
+        
+        {/* Animated background elements */}
+        <div className="absolute top-20 left-20 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-blob"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-accent/10 rounded-full blur-xl animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-secondary/10 rounded-full blur-xl animate-blob animation-delay-4000"></div>
+        
         <div className="relative z-10 flex flex-col justify-center px-12 py-16">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">
+          <div className="mb-8 transform transition-all duration-700 ease-out">
+            <h1 className="text-4xl font-bold text-white mb-4 animate-slide-in-up">
               Welcome to StartupDeck
             </h1>
-            <p className="text-gray-300 text-lg leading-relaxed">
+            <p className="text-gray-300 text-lg leading-relaxed animate-slide-in-up animation-delay-200">
               Transform your startup ideas into reality with our comprehensive analysis platform. 
               Get insights, validate your concepts, and build the future.
             </p>
           </div>
           
           <div className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                <div className="w-6 h-6 bg-primary rounded"></div>
+            <div className="flex items-center space-x-4 transform transition-all duration-500 hover:translate-x-2">
+              <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                <div className="w-6 h-6 bg-primary rounded animate-pulse"></div>
               </div>
               <div>
                 <h3 className="text-white font-semibold">AI-Powered Analysis</h3>
@@ -160,9 +174,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
-                <div className="w-6 h-6 bg-secondary rounded"></div>
+            <div className="flex items-center space-x-4 transform transition-all duration-500 hover:translate-x-2">
+              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                <div className="w-6 h-6 bg-secondary rounded animate-pulse animation-delay-1000"></div>
               </div>
               <div>
                 <h3 className="text-white font-semibold">Market Research</h3>
@@ -170,9 +184,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center">
-                <div className="w-6 h-6 bg-accent rounded"></div>
+            <div className="flex items-center space-x-4 transform transition-all duration-500 hover:translate-x-2">
+              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                <div className="w-6 h-6 bg-accent rounded animate-pulse animation-delay-2000"></div>
               </div>
               <div>
                 <h3 className="text-white font-semibold">Growth Strategy</h3>
@@ -184,8 +198,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       </div>
 
       {/* Right Side - Form Section */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
-        <div className="w-full max-w-md">
+      <div className={`flex-1 flex items-center justify-center px-6 py-12 lg:px-12 transition-all duration-300 ${isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
+        <div className="w-full max-w-md animate-slide-in-up">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               {type === 'login' ? 'Welcome back' : 'Create account'}
@@ -201,7 +215,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           <div className="space-y-3 mb-6">
             <Button 
               variant="outline" 
-              className="w-full h-12 border-gray-300 hover:bg-gray-50"
+              className="w-full h-12 border-gray-300 hover:bg-gray-50 hover:scale-105 transition-all duration-200"
               onClick={handleGoogleSignIn}
               disabled={isGoogleLoading}
             >
@@ -234,7 +248,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
             
             <Button 
               variant="outline" 
-              className="w-full h-12 border-gray-300 hover:bg-gray-50"
+              className="w-full h-12 border-gray-300 hover:bg-gray-50 hover:scale-105 transition-all duration-200"
               onClick={handleGitHubSignIn}
               disabled={isGitHubLoading}
             >
@@ -270,9 +284,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               <button
                 type="button"
                 onClick={() => setAuthMethod('password')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   authMethod === 'password'
-                    ? 'bg-white text-gray-900 shadow-sm'
+                    ? 'bg-white text-gray-900 shadow-sm transform scale-105'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -281,9 +295,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               <button
                 type="button"
                 onClick={() => setAuthMethod('magic')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                   authMethod === 'magic'
-                    ? 'bg-white text-gray-900 shadow-sm'
+                    ? 'bg-white text-gray-900 shadow-sm transform scale-105'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -465,22 +479,30 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
             </Form>
           )}
 
-          {/* Footer Links */}
+          {/* Footer Links with Animation */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               {type === 'login' ? (
                 <>
                   Don't have an account?{' '}
-                  <Link to="/register" className="text-primary font-medium hover:text-primary/80">
+                  <button
+                    onClick={() => handleNavigationWithAnimation('/register')}
+                    className="text-primary font-medium hover:text-primary/80 inline-flex items-center gap-1 hover:gap-2 transition-all duration-200"
+                  >
                     Sign up for free
-                  </Link>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
                 </>
               ) : (
                 <>
                   Already have an account?{' '}
-                  <Link to="/login" className="text-primary font-medium hover:text-primary/80">
+                  <button
+                    onClick={() => handleNavigationWithAnimation('/login')}
+                    className="text-primary font-medium hover:text-primary/80 inline-flex items-center gap-1 hover:gap-2 transition-all duration-200"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
                     Sign in
-                  </Link>
+                  </button>
                 </>
               )}
             </p>
