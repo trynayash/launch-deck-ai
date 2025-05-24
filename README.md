@@ -33,7 +33,7 @@
 > Build decks that convince investors, with zero design or copywriting needed.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/trinib/trinib/main/.images/divider.svg" alt="Divider" />
+  <img src="intersecting-waves-scattered.svg" alt="Divider" />
 </div>
 
 ## ✨ Key Features
