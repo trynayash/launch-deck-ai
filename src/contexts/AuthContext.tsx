@@ -16,6 +16,7 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithGitHub: () => Promise<void>;
   signInWithMagicLink: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   getProfile: () => Promise<any>;
@@ -154,6 +155,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signInWithGitHub = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) {
+        toast.error(error.message);
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error signing in with GitHub:', error);
+      throw error;
+    }
+  };
+
   const signInWithMagicLink = async (email: string) => {
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -222,6 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signInWithGoogle,
+    signInWithGitHub,
     signInWithMagicLink,
     signOut,
     getProfile
