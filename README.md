@@ -222,7 +222,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 ---
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/trinib/trinib/main/.images/footer.svg" alt="Footer" />
+  <img src="footer.svg" alt="Footer" />
 </div>
 
 <p align="center">
