@@ -5,12 +5,6 @@
   AI-powered startup pitch deck generator built with cutting-edge tech.
 </p>
 
-<p align="center">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/trynayash/startupdeck?color=blue&style=flat-square">
-  <img alt="Repo size" src="https://img.shields.io/github/repo-size/trynayash/startupdeck?style=flat-square">
-  <img alt="License" src="https://img.shields.io/github/license/trynayash/startupdeck?style=flat-square">
-</p>
-
 ---
 
 ## 🧠 What is StartupDeck?
